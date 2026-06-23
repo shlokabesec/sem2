@@ -1,20 +1,95 @@
-// console.log("Hello, World!");
-// var a = 10;
-// var a = 15;
-// console.log("The value of a is: " + a);
-// var b = 20;
-// var sum = a + b;
-// console.log("The sum of a and b is: " + sum);
-// let x = 5;
-// let y = 10;
-// x = 15;
-// let sum = x + y;
-// console.log("The sum of x and y is: " + sum);
-// const PI = 3.14;
-// console.log("The value of PI is: " + PI);
-// let name = "Alice";
-// let age = 30;
-// let isStudent = true;
-// console.log("Name: " + name);
-// console.log("Age: " + age);
-// console.log("Is Student: " + isStudent);
+document.addEventListener("DOMContentLoaded", function () {
+
+    let cart = [];
+
+    const nav = document.querySelector(".navbar");
+
+    const cartBox = document.createElement("div");
+
+    cartBox.classList.add("cart-box");
+
+    cartBox.innerHTML = `
+        🛒 Cart: <span id="cart-count">0</span>
+    `;
+
+    cartBox.onclick = function () {
+        window.location.href = "cart.html";
+    };
+
+    nav.appendChild(cartBox);
+
+    const searchInput =
+        document.querySelector(".search-box input");
+
+    const products =
+        document.querySelectorAll(".product");
+
+    searchInput.addEventListener("keyup", function () {
+
+        const value =
+            searchInput.value.toLowerCase();
+
+        products.forEach(product => {
+
+            const name =
+                product.querySelector(".pname")
+                    .textContent
+                    .toLowerCase();
+
+            if (name.includes(value)) {
+                product.style.display = "flex";
+            } else {
+                product.style.display = "none";
+            }
+
+        });
+
+    });
+
+    const cartButtons =
+        document.querySelectorAll(".cart-btn");
+
+    cartButtons.forEach(button => {
+
+        button.addEventListener("click", function () {
+
+            const product =
+                this.parentElement.parentElement;
+
+            const productName =
+                product.querySelector(".pname").innerText;
+
+            const productPrice =
+                parseFloat(
+                    product.querySelector(".price")
+                        .innerText
+                        .replace("₹", "")
+                        .replace(/,/g, "")
+                );
+
+            cart.push({
+                name: productName,
+                price: productPrice
+            });
+
+            localStorage.setItem(
+                "cart",
+                JSON.stringify(cart)
+            );
+
+            document.getElementById("cart-count")
+                .innerText = cart.length;
+
+            this.innerText = "Added ✓";
+
+            setTimeout(() => {
+
+                this.innerText = "Add to Cart";
+
+            }, 1000);
+
+        });
+
+    });
+
+});
